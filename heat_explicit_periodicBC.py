@@ -9,7 +9,10 @@ steps = 1e3
 dt = t / steps
 N = 100.  # Try N = 150.
 dx = L / N
-D = 0.25
+
+D = .25
+A = -1.
+B = .1
 
 # b<=1 !!!
 b = 2. * D * dt / (dx ** 2)
@@ -21,8 +24,9 @@ T = np.linspace(0, t, steps + 1)
 
 # initial temperature distribution
 u = np.sin(2 * np.pi * omega * X)
-u = np.zeros(len(X))
 u[10:20] = 1.
+u = np.zeros(len(X))
+u = np.ones(len(X))
 
 u = np.array(list(map(lambda x: u, T)))
 
@@ -35,9 +39,12 @@ for k in range(0, int(steps)):
         else:
             u[k + 1][l] = u[k][l] + 0.5 * b * (u[k][l - 1] + u[k][l + 1] - 2. * u[k][l])
 
+        u[k + 1][l] += A*u[k][l]+B*u[k][l]**3
+
 filtered = int(steps / 100)
 
 plt.plot(X, u[0])
+plt.plot(X, u[10])
 plt.plot(X, u[100])
 plt.plot(X, u[200])
 plt.plot(X, u[900])
