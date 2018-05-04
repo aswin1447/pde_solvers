@@ -20,12 +20,12 @@ X = np.linspace(0, L, N + 1)
 T = np.linspace(0, t, steps + 1)
 
 # initial temperature distribution
-u = np.sin(np.pi * X)
 u = np.cos(2 * np.pi * omega * X) ** 2
+u = np.sin(np.pi * X)
 
 # boundary temperature for all times
-u[0] = u[-1] = 0.
 u[0] = u[-1] = 1.
+u[0] = u[-1] = 0.
 
 u = np.array(list(map(lambda x: u, T)))
 
@@ -38,12 +38,13 @@ filtered = int(steps / 100)
 # plt.plot(X, u[0])
 # plt.plot(X, u[100])
 # plt.plot(X, u[200])
-# plt.plot(X, u[999])
-# plt.plot(X, u[int(steps)])
-# plt.plot(X, np.exp(- D * np.pi ** 2 * t) * np.sin(np.pi * X), color='k')
+# plt.plot(X, u[900])
+plt.plot(X, u[int(steps)])
+plt.plot(X, np.exp(- D * np.pi ** 2 * t) * np.sin(np.pi * X), color='k', alpha=.5)
 
-x, t = np.meshgrid(X, T[0::filtered])
-plt.pcolormesh(x, t, u[0::filtered])
-plt.colorbar()
+# x, t = np.meshgrid(X, T[0::filtered])
+# plt.pcolormesh(x, t, u[0::filtered])
+# plt.colorbar()
+plt.xlim(0, 1)
 plt.tight_layout()
 plt.savefig('plots/explicit_heat.pdf')
