@@ -29,14 +29,14 @@ class Dynamics:
         I = 1.0j
         a, = params
 
-        # return [2. * np.pi * a * ((-1) ** k) * y[k] for k in [1, 0]]
-        # return [2. * np.pi * a * I * y[k] for k in [0]]
-        rslt = [0.0]
+        rslt = [(D / (dx ** 2)) * (y[-1] + y[1] - 2. * y[0])]
         for l in range(1, int(N)):
             x = (D / (dx ** 2)) * (y[l - 1] + y[l + 1] - 2. * y[l])
+            # add non-linearity
             x += A * y[l] + B * (y[l] ** 3)
             rslt.append(x)
-        rslt.append(0.0)
+        rslt.append((D / (dx ** 2)) * (y[int(N - 1)] + y[0] - 2. * y[int(N)]))
+
         return rslt
 
     def evolve(self):
@@ -45,10 +45,14 @@ class Dynamics:
             # initial.append(np.cos(2 * np.pi * x) ** 2)
             # initial.append(0.)
             initial.append(1. / np.sqrt(B))
+
+        initial = np.array(initial)
+
         # initial[0] = 1.0
         # initial[-1] = 1.0
-        initial[0] = 0.
-        initial[-1] = 0.
+        # initial[0] = 0.
+        # initial[-1] = 0.
+        # initial[10:20] = 1.
         initial[0] = 1. / np.sqrt(B)
         initial[-1] = 1. / np.sqrt(B)
 
@@ -81,6 +85,7 @@ dynamics.evolve()
 data_t = np.linspace(0, T, steps + 1)
 X = np.linspace(0, L, N + 1)
 
+plt.plot(X, dynamics.data.T[0])
 plt.plot(X, dynamics.data.T[100])
 plt.plot(X, dynamics.data.T[1000])
 plt.plot(X, dynamics.data.T[5000])
